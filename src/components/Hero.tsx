@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 
 export default function Hero() {
   const [isVisible, setIsVisible] = useState(false);
+  const [isResumeOpen, setIsResumeOpen] = useState(false);
 
   useEffect(() => {
     const toggleVisibility = () => {
@@ -13,6 +14,15 @@ export default function Hero() {
     window.addEventListener("scroll", toggleVisibility);
     return () => window.removeEventListener("scroll", toggleVisibility);
   }, []);
+
+  // Prevent background scrolling when modal is open
+  useEffect(() => {
+    if (isResumeOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+  }, [isResumeOpen]);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -24,8 +34,6 @@ export default function Hero() {
   ];
 
   return (
-    // mt-20 ensures it starts after the 80px Navbar
-    // pt-12 adds extra breathing room on mobile
     <section id="home" className="min-h-[calc(100vh-80px)] mt-20 w-full flex items-center justify-center bg-[#0a0a0a] px-6 py-12 lg:py-0 overflow-hidden">
       <div className="max-w-7xl w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
         
@@ -51,9 +59,13 @@ export default function Hero() {
             <a href="#contact" className="px-7 py-3.5 bg-[#7fffd4] text-black text-sm font-bold rounded-xl hover:bg-[#64eec2] transition-all shadow-[0_10px_30px_-10px_rgba(127,255,212,0.4)]">
               Start a Project
             </a>
-            <a href="#resume" className="px-7 py-3.5 bg-transparent text-white text-sm font-bold rounded-xl border border-gray-800 hover:border-[#7fffd4] transition-all">
+            {/* View Resume Button */}
+            <button 
+              onClick={() => setIsResumeOpen(true)}
+              className="px-7 py-3.5 bg-transparent text-white text-sm font-bold rounded-xl border border-gray-800 hover:border-[#7fffd4] transition-all"
+            >
               View Resume
-            </a>
+            </button>
           </div>
 
           <div className="pt-8 border-t border-gray-900/50">
@@ -68,7 +80,7 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* Profile Image - Responsive Sizes */}
+        {/* Profile Image */}
         <div className="lg:col-span-5 order-1 lg:order-2 flex justify-center lg:justify-end">
           <div className="relative group">
             <div className="absolute inset-0 scale-110 border border-[#7fffd4]/20 rounded-full animate-pulse"></div>
@@ -81,8 +93,35 @@ export default function Hero() {
             </div>
           </div>
         </div>
-
       </div>
+
+      {/* --- RESUME MODAL POPUP --- */}
+      {isResumeOpen && (
+        <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 md:p-10">
+          <div className="relative w-full h-full max-w-5xl bg-[#111] rounded-2xl overflow-hidden flex flex-col shadow-2xl border border-white/10">
+            
+            {/* Modal Header with Close Button */}
+            <div className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-[#0a0a0a]">
+              <h3 className="text-[#7fffd4] font-bold text-xs tracking-widest uppercase">My Resume</h3>
+              <button 
+                onClick={() => setIsResumeOpen(false)}
+                className="p-2 hover:bg-white/10 rounded-full transition-colors text-white"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+              </button>
+            </div>
+
+{/* PDF Viewer Container */}
+<div className="flex-1 w-full h-full overflow-y-auto bg-[#1a1a1a]">
+  <iframe 
+    src="/cv/myresume.pdf#toolbar=0&navpanes=0&scrollbar=1" 
+    className="w-full h-full min-h-[500px] border-none"
+    title="John Paul CV"
+  />
+</div>
+          </div>
+        </div>
+      )}
 
       {/* Scroll to Top Button */}
       <button
