@@ -47,7 +47,7 @@ export default function Hero() {
           <div className="absolute w-[280px] h-[280px] md:w-[450px] md:h-[450px] border-2 border-[#7fffd4]/30 rounded-full animate-pulse"></div>
           <div className="relative z-10 w-64 h-64 md:w-96 md:h-96 rounded-full overflow-hidden border-4 border-[#1a1a1a]">
             <img
-              src="/myprofile.png"
+              src="/myprofile.jpg"
               alt="John Paul Castilla Valdez"
               className="w-full h-full object-cover"
             />
