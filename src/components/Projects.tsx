@@ -10,7 +10,8 @@ export default function Projects() {
       description: "Transformed a static landing page into a dynamic corporate platform. Integrated inquiry handling systems and a secure admin dashboard for data management.",
       stack: ["Laravel", "SQL", "Tailwind", "Bluehost"],
       period: "1 Month",
-      status: "Completed"
+      status: "Completed",
+      image: "/project-images/macro.png" // Pointing to public/project-images/macro.png
     }
   ];
 
@@ -46,23 +47,41 @@ export default function Projects() {
           <h3 className="text-xl font-semibold text-gray-500 uppercase tracking-[0.2em] mb-10">Completed Work</h3>
           <div className="grid grid-cols-1 gap-8">
             {completedProjects.map((project, index) => (
-              <div key={index} className="bg-[#111111] border border-gray-800 p-8 rounded-2xl hover:border-[#7fffd4]/50 transition-all group shadow-2xl">
-                <div className="flex flex-col md:flex-row md:items-center justify-between mb-6">
-                  <div>
-                    <span className="text-[#7fffd4] text-sm font-mono mb-2 block">{project.type}</span>
-                    <h4 className="text-2xl font-bold text-white group-hover:text-[#7fffd4] transition-colors">{project.title}</h4>
+              <div key={index} className="bg-[#111111] border border-gray-800 rounded-2xl hover:border-[#7fffd4]/50 transition-all group shadow-2xl overflow-hidden">
+                <div className="flex flex-col lg:flex-row">
+                  {/* Text Content Area */}
+                  <div className="p-8 lg:w-3/5 flex flex-col justify-center">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between mb-6">
+                      <div>
+                        <span className="text-[#7fffd4] text-sm font-mono mb-2 block">{project.type}</span>
+                        <h4 className="text-2xl font-bold text-white group-hover:text-[#7fffd4] transition-colors">{project.title}</h4>
+                      </div>
+                      <div className="mt-4 md:mt-0">
+                        <span className="text-gray-500 text-sm italic">Duration: {project.period}</span>
+                      </div>
+                    </div>
+                    
+                    <p className="text-gray-400 leading-relaxed mb-8">{project.description}</p>
+                    
+                    <div className="flex flex-wrap gap-3">
+                      {project.stack.map((tech, i) => (
+                        <span key={i} className="px-4 py-1 bg-black border border-gray-800 text-gray-400 text-xs rounded-full group-hover:border-[#7fffd4]/30 transition-all">
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
                   </div>
-                  <div className="mt-4 md:mt-0 text-right">
-                    <span className="text-gray-500 text-sm">Duration: {project.period}</span>
+
+                  {/* Project Image Area */}
+                  <div className="lg:w-2/5 h-64 lg:h-auto relative overflow-hidden bg-gray-900">
+                    <img 
+                      src={project.image} 
+                      alt={project.title}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-80 group-hover:opacity-100"
+                    />
+                    {/* Gradient Overlay for seamless transition on mobile */}
+                    <div className="absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-l from-transparent to-[#111111] pointer-events-none"></div>
                   </div>
-                </div>
-                <p className="text-gray-400 leading-relaxed mb-8 max-w-3xl">{project.description}</p>
-                <div className="flex flex-wrap gap-3">
-                  {project.stack.map((tech, i) => (
-                    <span key={i} className="px-4 py-1 bg-black border border-gray-800 text-gray-400 text-xs rounded-full group-hover:border-[#7fffd4]/30 transition-all">
-                      {tech}
-                    </span>
-                  ))}
                 </div>
               </div>
             ))}

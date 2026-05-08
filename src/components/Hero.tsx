@@ -5,6 +5,8 @@ import React, { useState, useEffect } from 'react';
 export default function Hero() {
   const [isVisible, setIsVisible] = useState(false);
   const [isResumeOpen, setIsResumeOpen] = useState(false);
+  // State for the tech stack modal
+  const [activeCategory, setActiveCategory] = useState<null | { label: string, techs: string[] }>(null);
 
   useEffect(() => {
     const toggleVisibility = () => {
@@ -15,23 +17,24 @@ export default function Hero() {
     return () => window.removeEventListener("scroll", toggleVisibility);
   }, []);
 
-  // Prevent background scrolling when modal is open
+  // Prevent scrolling when any modal is open
   useEffect(() => {
-    if (isResumeOpen) {
+    if (isResumeOpen || activeCategory) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'unset';
     }
-  }, [isResumeOpen]);
+  }, [isResumeOpen, activeCategory]);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const techStack = [
-    "HTML5", "CSS", "Next.js", "React.js", 
-    "Tailwind CSS", "Bootstrap", "Blade", "Php", "Laravel", "Node.js", "MySQL",
-    "Supabase", "phpMyAdmin", "Git", "GIthub", "Vercel", "Bluehost"
+  const techStackGroups = [
+    { label: "Front End", techs: ["Next.js", "React.js", "Tailwind CSS", "Bootstrap", "HTML5", "CSS"] },
+    { label: "Back End", techs: ["Laravel", "Node.js", "Php", "Blade"] },
+    { label: "Database", techs: ["MySQL", "phpMyAdmin", "Supabase"] },
+    { label: "Design & Tools", techs: ["Figma", "Git", "Github", "Vercel", "Bluehost"] }
   ];
 
   return (
@@ -52,15 +55,13 @@ export default function Hero() {
           </h1>
 
           <p className="text-gray-400 text-base md:text-lg max-w-xl mb-10 leading-relaxed">
-            I am a <span className="text-white font-medium">Web Developer</span> specialized in building high-performance 
-            enterprise systems and modern digital experiences.
+            I am a <span className="text-white font-medium">Web Developer</span> specialized in building responsive and modern web applications for businesses.
           </p>
           
           <div className="flex flex-wrap gap-4 mb-12">
             <a href="#contact" className="px-7 py-3.5 bg-[#7fffd4] text-black text-sm font-bold rounded-xl hover:bg-[#64eec2] transition-all shadow-[0_10px_30px_-10px_rgba(127,255,212,0.4)]">
               Start a Project
             </a>
-            {/* View Resume Button */}
             <button 
               onClick={() => setIsResumeOpen(true)}
               className="px-7 py-3.5 bg-transparent text-white text-sm font-bold rounded-xl border border-gray-800 hover:border-[#7fffd4] transition-all"
@@ -69,13 +70,23 @@ export default function Hero() {
             </button>
           </div>
 
+          {/* Interactive Tech Stack Containers */}
           <div className="pt-8 border-t border-gray-900/50">
-            <p className="text-gray-500 text-[10px] font-semibold uppercase tracking-[0.3em] mb-4">Tech Stack</p>
-            <div className="flex flex-wrap gap-x-6 gap-y-3 text-gray-500 font-medium text-xs">
-              {techStack.map((tech) => (
-                <span key={tech} className="hover:text-[#7fffd4] transition-colors cursor-default uppercase">
-                  {tech}
-                </span>
+            <p className="text-gray-500 text-[10px] font-semibold uppercase tracking-[0.3em] mb-4">Click to view Tech Stack</p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              {techStackGroups.map((group) => (
+                <div 
+                  key={group.label}
+                  onClick={() => setActiveCategory(group)}
+                  className="group cursor-pointer p-4 rounded-xl border border-gray-800 bg-white/5 hover:border-[#7fffd4] hover:bg-[#7fffd4]/5 transition-all duration-300"
+                >
+                  <p className="text-[#7fffd4] text-[10px] font-bold uppercase tracking-widest mb-1 group-hover:text-white transition-colors">
+                    {group.label}
+                  </p>
+                  <p className="text-gray-500 text-[9px] uppercase">
+                    {group.techs.length} Skills
+                  </p>
+                </div>
               ))}
             </div>
           </div>
@@ -96,35 +107,68 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* --- RESUME MODAL POPUP --- */}
-      {isResumeOpen && (
-        <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 md:p-10">
-          <div className="relative w-full h-full max-w-5xl bg-[#111] rounded-2xl overflow-hidden flex flex-col shadow-2xl border border-white/10">
-            
-            {/* Modal Header with Close Button */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-[#0a0a0a]">
-              <h3 className="text-[#7fffd4] font-bold text-xs tracking-widest uppercase">My Resume</h3>
-              <button 
-                onClick={() => setIsResumeOpen(false)}
-                className="p-2 hover:bg-white/10 rounded-full transition-colors text-white"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-              </button>
+      {/* --- TECH STACK POPUP OVERLAY --- */}
+      {activeCategory && (
+        <div 
+          className="fixed inset-0 z-[1100] flex items-center justify-center bg-black/95 backdrop-blur-md p-6"
+          onClick={() => setActiveCategory(null)}
+        >
+          <div 
+            className="max-w-2xl w-full text-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button 
+              onClick={() => setActiveCategory(null)}
+              className="mb-8 text-gray-500 hover:text-[#7fffd4] transition-colors uppercase text-xs font-bold tracking-[0.3em]"
+            >
+              [ Close Category ]
+            </button>
+            <h2 className="text-[#7fffd4] text-4xl md:text-6xl font-extrabold uppercase mb-12 tracking-tighter">
+              {activeCategory.label}
+            </h2>
+            <div className="flex flex-wrap justify-center gap-4 md:gap-8">
+              {activeCategory.techs.map((tech) => (
+                <span key={tech} className="text-white text-xl md:text-3xl font-medium opacity-80 hover:opacity-100 hover:text-[#7fffd4] transition-all cursor-default uppercase tracking-tight">
+                  {tech}
+                </span>
+              ))}
             </div>
-
-{/* PDF Viewer Container */}
-<div className="flex-1 w-full h-full overflow-y-auto bg-[#1a1a1a]">
-  <iframe 
-    src="/cv/myresume.pdf#toolbar=0&navpanes=0&scrollbar=1" 
-    className="w-full h-full min-h-[500px] border-none"
-    title="John Paul CV"
-  />
-</div>
           </div>
         </div>
       )}
 
-      {/* Scroll to Top Button */}
+      {/* --- RESUME MODAL POPUP --- */}
+      {isResumeOpen && (
+        <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 md:p-10">
+          <div className="relative w-full h-full max-w-5xl bg-[#111] rounded-2xl overflow-hidden flex flex-col shadow-2xl border border-white/10">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-[#0a0a0a]">
+              <h3 className="text-[#7fffd4] font-bold text-xs tracking-widest uppercase">My Resume</h3>
+              <div className="flex items-center gap-2">
+                <a 
+                  href="/cv/myresume.pdf" 
+                  download="John_Paul_Resume.pdf"
+                  className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-[#7fffd4]/10 text-white hover:text-[#7fffd4] rounded-lg transition-all text-xs font-bold border border-white/10 hover:border-[#7fffd4]/30"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  Download
+                </a>
+                <button onClick={() => setIsResumeOpen(false)} className="p-2 hover:bg-white/10 rounded-full transition-colors text-white">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+              </div>
+            </div>
+            <div className="flex-1 bg-[#1a1a1a]">
+              <iframe 
+                src="/cv/myresume.pdf#toolbar=0&navpanes=0&scrollbar=1" 
+                className="w-full h-full min-h-[500px] border-none"
+                title="John Paul CV"
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Scroll Button */}
       <button
         onClick={scrollToTop}
         className={`fixed bottom-8 right-8 z-[50] p-4 rounded-full bg-[#7fffd4] text-black shadow-lg transition-all duration-500 ${
