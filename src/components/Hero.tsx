@@ -5,19 +5,31 @@ import React, { useState, useEffect } from 'react';
 export default function Hero() {
   const [isVisible, setIsVisible] = useState(false);
   const [isResumeOpen, setIsResumeOpen] = useState(false);
-  // State for the tech stack modal
   const [activeCategory, setActiveCategory] = useState<null | { label: string, techs: string[] }>(null);
+  
+  // 1. Initialize with off-screen coordinates so it doesn't "pop" in at (0,0)
+  const [mousePos, setMousePos] = useState({ x: -1000, y: -1000 });
 
   useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      // Use clientX/Y for viewport-based tracking
+      setMousePos({ x: e.clientX, y: e.clientY });
+    };
+
     const toggleVisibility = () => {
       if (window.scrollY > 300) setIsVisible(true);
       else setIsVisible(false);
     };
+
+    window.addEventListener("mousemove", handleMouseMove);
     window.addEventListener("scroll", toggleVisibility);
-    return () => window.removeEventListener("scroll", toggleVisibility);
+    
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("scroll", toggleVisibility);
+    };
   }, []);
 
-  // Prevent scrolling when any modal is open
   useEffect(() => {
     if (isResumeOpen || activeCategory) {
       document.body.style.overflow = 'hidden';
@@ -38,13 +50,28 @@ export default function Hero() {
   ];
 
   return (
-    <section id="home" className="min-h-[calc(100vh-80px)] mt-20 w-full flex items-center justify-center bg-[#0a0a0a] px-6 py-12 lg:py-0 overflow-hidden">
-      <div className="max-w-7xl w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+    // Added relative and z-0 to the section to create a stacking context
+    <section id="home" className="relative z-0 min-h-[calc(100vh-80px)] mt-20 w-full flex items-center justify-center bg-[#0a0a0a] px-6 py-12 lg:py-0 overflow-hidden">
+      
+      {/* 2. THE GLOW: Use 'fixed' and a high enough Z-index to be above the BG but below the text */}
+      <div 
+        className="pointer-events-none fixed inset-0 z-10 opacity-100 transition-opacity duration-300"
+        style={{
+          background: `radial-gradient(500px at ${mousePos.x}px ${mousePos.y}px, rgba(127, 255, 212, 0.08), transparent 80%)`
+        }}
+      />
+
+      {/* 3. CONTENT WRAPPER: Must have a higher z-index than the glow */}
+      <div className="max-w-7xl w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-20">
         
-        {/* Text Content */}
         <div className="lg:col-span-7 order-2 lg:order-1 flex flex-col justify-center">
-          <div className="inline-block w-fit px-4 py-1.5 mb-6 rounded-full border border-[#7fffd4]/20 bg-[#7fffd4]/5 text-[#7fffd4] text-[10px] font-bold tracking-[0.2em] uppercase">
-            Available for Freelance
+          <div className="flex flex-wrap gap-3 mb-6">
+            <div className="inline-block px-4 py-1.5 rounded-full border border-[#7fffd4]/20 bg-[#7fffd4]/5 text-[#7fffd4] text-[10px] font-bold tracking-[0.2em] uppercase">
+              Available for Freelance
+            </div>
+            <div className="inline-block px-4 py-1.5 rounded-full border border-white/10 bg-white/5 text-gray-400 text-[10px] font-bold tracking-[0.2em] uppercase">
+              Digital Solutions Consultant
+            </div>
           </div>
           
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight mb-6 tracking-tighter">
@@ -70,7 +97,6 @@ export default function Hero() {
             </button>
           </div>
 
-          {/* Interactive Tech Stack Containers */}
           <div className="pt-8 border-t border-gray-900/50">
             <p className="text-gray-500 text-[10px] font-semibold uppercase tracking-[0.3em] mb-4">Click to view Tech Stack</p>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -92,7 +118,6 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* Profile Image */}
         <div className="lg:col-span-5 order-1 lg:order-2 flex justify-center lg:justify-end">
           <div className="relative group">
             <div className="absolute inset-0 scale-110 border border-[#7fffd4]/20 rounded-full animate-pulse"></div>
@@ -107,74 +132,40 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* --- TECH STACK POPUP OVERLAY --- */}
+      {/* MODALS AND SCROLL BUTTON - Full functionality below */}
       {activeCategory && (
-        <div 
-          className="fixed inset-0 z-[1100] flex items-center justify-center bg-black/95 backdrop-blur-md p-6"
-          onClick={() => setActiveCategory(null)}
-        >
-          <div 
-            className="max-w-2xl w-full text-center"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button 
-              onClick={() => setActiveCategory(null)}
-              className="mb-8 text-gray-500 hover:text-[#7fffd4] transition-colors uppercase text-xs font-bold tracking-[0.3em]"
-            >
-              [ Close Category ]
-            </button>
-            <h2 className="text-[#7fffd4] text-4xl md:text-6xl font-extrabold uppercase mb-12 tracking-tighter">
-              {activeCategory.label}
-            </h2>
+        <div className="fixed inset-0 z-[1100] flex items-center justify-center bg-black/95 backdrop-blur-md p-6" onClick={() => setActiveCategory(null)}>
+          <div className="max-w-2xl w-full text-center" onClick={(e) => e.stopPropagation()}>
+            <button onClick={() => setActiveCategory(null)} className="mb-8 text-gray-500 hover:text-[#7fffd4] transition-colors uppercase text-xs font-bold tracking-[0.3em]">[ Close ]</button>
+            <h2 className="text-[#7fffd4] text-4xl md:text-6xl font-extrabold uppercase mb-12 tracking-tighter">{activeCategory.label}</h2>
             <div className="flex flex-wrap justify-center gap-4 md:gap-8">
               {activeCategory.techs.map((tech) => (
-                <span key={tech} className="text-white text-xl md:text-3xl font-medium opacity-80 hover:opacity-100 hover:text-[#7fffd4] transition-all cursor-default uppercase tracking-tight">
-                  {tech}
-                </span>
+                <span key={tech} className="text-white text-xl md:text-3xl font-medium opacity-80 hover:opacity-100 hover:text-[#7fffd4] transition-all cursor-default uppercase tracking-tight">{tech}</span>
               ))}
             </div>
           </div>
         </div>
       )}
 
-      {/* --- RESUME MODAL POPUP --- */}
       {isResumeOpen && (
         <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 md:p-10">
           <div className="relative w-full h-full max-w-5xl bg-[#111] rounded-2xl overflow-hidden flex flex-col shadow-2xl border border-white/10">
             <div className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-[#0a0a0a]">
               <h3 className="text-[#7fffd4] font-bold text-xs tracking-widest uppercase">My Resume</h3>
-              <div className="flex items-center gap-2">
-                <a 
-                  href="/cv/myresume.pdf" 
-                  download="John_Paul_Resume.pdf"
-                  className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-[#7fffd4]/10 text-white hover:text-[#7fffd4] rounded-lg transition-all text-xs font-bold border border-white/10 hover:border-[#7fffd4]/30"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                  Download
-                </a>
+              <div className="flex items-center gap-4">
                 <button onClick={() => setIsResumeOpen(false)} className="p-2 hover:bg-white/10 rounded-full transition-colors text-white">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                 </button>
               </div>
             </div>
             <div className="flex-1 bg-[#1a1a1a]">
-              <iframe 
-                src="/cv/myresume.pdf#toolbar=0&navpanes=0&scrollbar=1" 
-                className="w-full h-full min-h-[500px] border-none"
-                title="John Paul CV"
-              />
+              <iframe src="/cv/myresume.pdf#toolbar=0" className="w-full h-full border-none" title="Resume" />
             </div>
           </div>
         </div>
       )}
 
-      {/* Scroll Button */}
-      <button
-        onClick={scrollToTop}
-        className={`fixed bottom-8 right-8 z-[50] p-4 rounded-full bg-[#7fffd4] text-black shadow-lg transition-all duration-500 ${
-          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'
-        }`}
-      >
+      <button onClick={scrollToTop} className={`fixed bottom-8 right-8 z-[50] p-4 rounded-full bg-[#7fffd4] text-black transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'}`}>
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="m18 15-6-6-6 6"/></svg>
       </button>
     </section>
