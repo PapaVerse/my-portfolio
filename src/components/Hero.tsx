@@ -29,8 +29,9 @@ export default function Hero() {
   };
 
   const techStack = [
-    "HTML5", "CSS", "Javascript", "React", 
-    "Laravel", "Next.js", "Tailwind", "MySQL"
+    "HTML5", "CSS", "Next.js", "React.js", 
+    "Tailwind CSS", "Bootstrap", "Blade", "Php", "Laravel", "Node.js", "MySQL",
+    "Supabase", "phpMyAdmin", "Git", "GIthub", "Vercel", "Bluehost"
   ];
 
   return (
