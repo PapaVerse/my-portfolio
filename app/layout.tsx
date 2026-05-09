@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-// Import the Navbar from your src/components folder
 import Navbar from "@/src/components/Navbar";
+import ScrollToTop from "@/src/components/ScrollToTop"; // Import here
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,12 +30,14 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-[#0a0a0a] text-white">
-        {/* Placing Navbar here ensures it stays at the top of every page */}
         <Navbar />
         
         <main className="flex-grow">
           {children}
         </main>
+
+        {/* Placing it here ensures it sits above all other content */}
+        <ScrollToTop />
       </body>
     </html>
   );

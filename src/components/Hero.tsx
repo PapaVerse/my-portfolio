@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react';
 export default function Hero() {
   const [isVisible, setIsVisible] = useState(false);
   const [isResumeOpen, setIsResumeOpen] = useState(false);
-  const [activeCategory, setActiveCategory] = useState<null | { label: string, techs: string[] }>(null);
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [mousePos, setMousePos] = useState({ x: -1000, y: -1000 });
 
   useEffect(() => {
@@ -27,13 +27,14 @@ export default function Hero() {
     };
   }, []);
 
+  // Lock scroll only when the Resume Modal is open
   useEffect(() => {
-    if (isResumeOpen || activeCategory) {
+    if (isResumeOpen) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'unset';
     }
-  }, [isResumeOpen, activeCategory]);
+  }, [isResumeOpen]);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -92,27 +93,49 @@ export default function Hero() {
             </button>
           </div>
 
+          {/* UPDATED INLINE TECH STACK (REPLACES OVERLAY) */}
           <div className="pt-8 border-t border-gray-900/50">
-            <p className="text-gray-500 text-[10px] font-semibold uppercase tracking-[0.3em] mb-4">Click to view Tech Stack</p>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <p className="text-gray-500 text-[10px] font-semibold uppercase tracking-[0.3em] mb-4">Click a category to view skills</p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
               {techStackGroups.map((group) => (
-                <div 
+                <button 
                   key={group.label}
-                  onClick={() => setActiveCategory(group)}
-                  className="group cursor-pointer p-4 rounded-xl border border-gray-800 bg-white/5 hover:border-[#7fffd4] hover:bg-[#7fffd4]/5 transition-all duration-300"
+                  onClick={() => setActiveCategory(activeCategory === group.label ? null : group.label)}
+                  className={`p-4 rounded-xl border text-left transition-all duration-300 ${
+                    activeCategory === group.label 
+                    ? "border-[#7fffd4] bg-[#7fffd4]/10 shadow-[0_0_20px_rgba(127,255,212,0.1)]" 
+                    : "border-gray-800 bg-white/5 hover:border-gray-600"
+                  }`}
                 >
-                  <p className="text-[#7fffd4] text-[10px] font-bold uppercase tracking-widest mb-1 group-hover:text-white transition-colors">
+                  <p className={`text-[10px] font-bold uppercase tracking-widest mb-1 ${activeCategory === group.label ? "text-[#7fffd4]" : "text-gray-400"}`}>
                     {group.label}
                   </p>
-                  <p className="text-gray-500 text-[9px] uppercase">
+                  <p className="text-gray-600 text-[9px] uppercase">
                     {group.techs.length} Skills
                   </p>
-                </div>
+                </button>
               ))}
+            </div>
+
+            {/* Content that appears when a category is selected */}
+            <div className={`overflow-hidden transition-all duration-500 ease-in-out ${activeCategory ? "max-h-64 opacity-100 mb-6" : "max-h-0 opacity-0"}`}>
+              <div className="p-6 bg-white/[0.02] border border-white/5 rounded-2xl">
+                <div className="flex flex-wrap gap-3">
+                  {techStackGroups.find(g => g.label === activeCategory)?.techs.map((tech) => (
+                    <span 
+                      key={tech} 
+                      className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-xs font-medium hover:border-[#7fffd4]/50 hover:text-[#7fffd4] transition-colors"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
+        {/* PROFILE IMAGE */}
         <div className="lg:col-span-5 order-1 lg:order-2 flex justify-center lg:justify-end">
           <div className="relative group">
             <div className="absolute inset-0 scale-110 border border-[#7fffd4]/20 rounded-full animate-pulse"></div>
@@ -127,27 +150,21 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* --- RESUME MODAL --- */}
+      {/* RESUME MODAL (Keep original z-index for full screen focus) */}
       {isResumeOpen && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 backdrop-blur-md p-4 pt-20 md:p-10">
+        <div className="fixed inset-0 z-[9990] flex items-center justify-center bg-black/90 backdrop-blur-md p-4 pt-20 md:p-10">
           <div className="relative w-full h-[80vh] max-w-5xl bg-[#111] rounded-2xl overflow-hidden flex flex-col shadow-2xl border border-white/10">
-            
-            {/* Header Bar */}
             <div className="h-16 flex items-center justify-between px-6 border-b border-white/5 bg-[#0a0a0a] shrink-0">
               <h3 className="text-[#7fffd4] font-bold text-xs tracking-widest uppercase">My Resume</h3>
-              
               <div className="flex items-center gap-4">
                 <a 
-                  href="/cv/myresume.pdf" 
+                  href="/myresume.pdf" 
                   download="John_Paul_Valdez_Resume.pdf" 
                   className="text-[10px] font-bold text-[#7fffd4] hover:text-white transition-colors uppercase tracking-widest bg-[#7fffd4]/10 px-3 py-2 rounded-lg border border-[#7fffd4]/20"
                 >
                   Download PDF
                 </a>
-                <button 
-                  onClick={() => setIsResumeOpen(false)} 
-                  className="p-2 hover:bg-white/10 rounded-full transition-colors text-white"
-                >
+                <button onClick={() => setIsResumeOpen(false)} className="p-2 hover:bg-white/10 rounded-full transition-colors text-white">
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                     <line x1="18" y1="6" x2="6" y2="18"></line>
                     <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -155,37 +172,14 @@ export default function Hero() {
                 </button>
               </div>
             </div>
-
-            {/* PDF Area */}
             <div className="flex-1 bg-[#1a1a1a] overflow-hidden relative">
-              <iframe 
-                src="/cv/myresume.pdf" 
-                className="w-full h-full border-none" 
-                title="Resume" 
-              />
+              <iframe src="/myresume.pdf" className="w-full h-full border-none" title="Resume" />
             </div>
           </div>
         </div>
       )}
 
-      {/* Tech Stack Overlay */}
-      {activeCategory && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/95 backdrop-blur-md p-6" onClick={() => setActiveCategory(null)}>
-          <div className="max-w-2xl w-full text-center" onClick={(e) => e.stopPropagation()}>
-            <button onClick={() => setActiveCategory(null)} className="mb-8 text-gray-500 hover:text-[#7fffd4] transition-colors uppercase text-xs font-bold tracking-[0.3em]">[ Close ]</button>
-            <h2 className="text-[#7fffd4] text-4xl md:text-6xl font-extrabold uppercase mb-12 tracking-tighter">{activeCategory.label}</h2>
-            <div className="flex flex-wrap justify-center gap-4 md:gap-8">
-              {activeCategory.techs.map((tech) => (
-                <span key={tech} className="text-white text-xl md:text-3xl font-medium opacity-80 hover:opacity-100 hover:text-[#7fffd4] transition-all cursor-default uppercase tracking-tight">{tech}</span>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
 
-      <button onClick={scrollToTop} className={`fixed bottom-8 right-8 z-[50] p-4 rounded-full bg-[#7fffd4] text-black transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'}`}>
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="m18 15-6-6-6 6"/></svg>
-      </button>
     </section>
   );
 }
