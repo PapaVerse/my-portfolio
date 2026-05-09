@@ -158,7 +158,7 @@ export default function Hero() {
               <h3 className="text-[#7fffd4] font-bold text-xs tracking-widest uppercase">My Resume</h3>
               <div className="flex items-center gap-4">
                 <a 
-                  href="/myresume.pdf" 
+                  href="/cv/myresume.pdf" 
                   download="John_Paul_Valdez_Resume.pdf" 
                   className="text-[10px] font-bold text-[#7fffd4] hover:text-white transition-colors uppercase tracking-widest bg-[#7fffd4]/10 px-3 py-2 rounded-lg border border-[#7fffd4]/20"
                 >
@@ -173,7 +173,7 @@ export default function Hero() {
               </div>
             </div>
             <div className="flex-1 bg-[#1a1a1a] overflow-hidden relative">
-              <iframe src="/myresume.pdf" className="w-full h-full border-none" title="Resume" />
+              <iframe src="/cv/myresume.pdf" className="w-full h-full border-none" title="Resume" />
             </div>
           </div>
         </div>
