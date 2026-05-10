@@ -55,7 +55,7 @@ export default function Projects() {
       description: "A secure internal communication tool for employees featuring real-time messaging, file sharing, group channels, and admin controls for employee status tracking.",
       stack: ["Laravel", "React", "MySQL", "Pusher/WebSockets"],
       features: ["File Downloads", "Report Generation", "Active/Inactive Status"],
-      status: "In Development"
+      status: "Upcoming Project"
     },
     {
       title: "Task Management System",
@@ -160,7 +160,7 @@ export default function Projects() {
         </div>
 
         <div>
-          <h3 className="text-xl font-semibold text-gray-500 uppercase tracking-[0.2em] mb-10">In Development</h3>
+          <h3 className="text-xl font-semibold text-gray-500 uppercase tracking-[0.2em] mb-10">Upcoming Projects</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {ongoingProjects.map((project, index) => (
               <div key={index} className="bg-[#111111] border border-gray-800 p-8 rounded-2xl hover:border-[#7fffd4]/50 transition-all flex flex-col justify-between">
