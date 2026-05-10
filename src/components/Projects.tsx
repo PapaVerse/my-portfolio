@@ -1,8 +1,17 @@
 "use client";
 
-import React from 'react';
+import React, { useState } from 'react';
+import { ChevronDown, Globe } from 'lucide-react';
+// Using React Icons for brand stability
+import { FaFacebook, FaInstagram, FaLinkedinIn } from "react-icons/fa6";
 
 export default function Projects() {
+  const [expandedIndex, setExpandedIndex] = useState(null);
+
+  const toggleExpand = (index) => {
+    setExpandedIndex(expandedIndex === index ? null : index);
+  };
+
   const completedProjects = [
     {
       title: "Macro Wiring Technologies Co. Inc.",
@@ -11,7 +20,29 @@ export default function Projects() {
       stack: ["Laravel", "SQL", "Tailwind", "Bluehost"],
       period: "1 Month",
       status: "Completed",
-      image: "/project-images/macro.png" // Pointing to public/project-images/macro.png
+      image: "/project-images/macro.png",
+      team: [
+        { 
+          name: "Drexel Santos", 
+          role: "Programmer",
+          socials: [
+            { icon: FaFacebook, href: "https://www.facebook.com/deysqui" },
+            { icon: FaInstagram, href: "https://www.instagram.com/drk_iel/" },
+            { icon: FaLinkedinIn, href: "https://www.linkedin.com/in/santos-drexel-944252255/" },
+            { icon: Globe, href: "https://drex-portfolio.vercel.app/?fbclid=IwY2xjawRswgNleHRuA2FlbQIxMABicmlkETF3VHpnYlJEY005MlpLc08xc3J0YwZhcHBfaWQQMjIyMDM5MTc4ODIwMDg5MgABHsty0b7T3qPTtUPHGiT03p8fHJn-hGwzE4sxPNAQzhpnYA2n0Wu9uYqXfudL_aem_F90OglW_DRqhAyHL0gO1rw", isPortfolio: true }
+          ]
+        },
+        { 
+          name: "Lyn Ciara Cabrera", 
+          role: "Data Analyst & UI Designer",
+          socials: [
+            { icon: FaFacebook, href: "https://www.facebook.com/linsydee" },
+            { icon: FaInstagram, href: "https://www.instagram.com/_ciar4lyn/" },
+            { icon: FaLinkedinIn, href: "https://www.linkedin.com/in/lyn-ciara-cabrera-b215073b0/" },
+            { icon: Globe, href: "#", isPortfolio: true }
+          ]
+        }
+      ]
     }
   ];
 
@@ -63,13 +94,22 @@ export default function Projects() {
                     
                     <p className="text-gray-400 leading-relaxed mb-8">{project.description}</p>
                     
-                    <div className="flex flex-wrap gap-3">
+                    <div className="flex flex-wrap gap-3 mb-8">
                       {project.stack.map((tech, i) => (
                         <span key={i} className="px-4 py-1 bg-black border border-gray-800 text-gray-400 text-xs rounded-full group-hover:border-[#7fffd4]/30 transition-all">
                           {tech}
                         </span>
                       ))}
                     </div>
+
+                    {/* Dropdown Button */}
+                    <button 
+                      onClick={() => toggleExpand(index)}
+                      className="flex items-center gap-2 text-[#7fffd4] text-sm font-bold uppercase tracking-widest hover:opacity-80 transition-all w-fit group/btn"
+                    >
+                      {expandedIndex === index ? 'Hide Team Info' : 'View Project Team'}
+                      <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${expandedIndex === index ? 'rotate-180' : ''}`} />
+                    </button>
                   </div>
 
                   {/* Project Image Area */}
@@ -79,8 +119,43 @@ export default function Projects() {
                       alt={project.title}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-80 group-hover:opacity-100"
                     />
-                    {/* Gradient Overlay for seamless transition on mobile */}
                     <div className="absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-l from-transparent to-[#111111] pointer-events-none"></div>
+                  </div>
+                </div>
+
+                {/* Expanded Content Section */}
+                <div className={`overflow-hidden transition-all duration-500 ease-in-out bg-black/40 ${expandedIndex === index ? 'max-h-[500px] border-t border-gray-800' : 'max-h-0'}`}>
+                  <div className="p-8">
+                    <h5 className="text-[#7fffd4] text-xs font-black uppercase tracking-[0.2em] mb-8">Development Team</h5>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                      {project.team.map((member, i) => (
+                        <div key={i} className="space-y-4">
+                          <div>
+                            <span className="text-white text-lg font-bold block">{member.name}</span>
+                            <span className="text-[#7fffd4] text-xs font-mono uppercase tracking-widest">{member.role}</span>
+                          </div>
+                          
+                          {/* Social Icons - Basis from your Contact code */}
+                          <div className="flex items-center gap-4">
+                            {member.socials.map((social, sIndex) => (
+                              <a 
+                                key={sIndex}
+                                href={social.href}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className={`flex items-center justify-center transition-all duration-300 hover:text-[#7fffd4] 
+                                  ${social.isPortfolio 
+                                    ? 'border border-gray-800 px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-tighter gap-2 text-gray-400 hover:border-[#7fffd4]' 
+                                    : 'text-gray-500'}`}
+                              >
+                                <social.icon size={social.isPortfolio ? 14 : 20} />
+                                {social.isPortfolio && "Portfolio"}
+                              </a>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
