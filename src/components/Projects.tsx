@@ -6,9 +6,11 @@ import { ChevronDown, Globe } from 'lucide-react';
 import { FaFacebook, FaInstagram, FaLinkedinIn } from "react-icons/fa6";
 
 export default function Projects() {
-  const [expandedIndex, setExpandedIndex] = useState(null);
+  // Fixed: explicitly allowing number or null for the state
+  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
 
-  const toggleExpand = (index) => {
+  // Fixed: Explicitly typed 'index' as a number to satisfy Vercel/TypeScript
+  const toggleExpand = (index: number) => {
     setExpandedIndex(expandedIndex === index ? null : index);
   };
 
@@ -73,14 +75,12 @@ export default function Projects() {
           <div className="h-1 w-20 bg-[#7fffd4] shadow-[0_0_10px_#7fffd4]"></div>
         </div>
 
-        {/* Completed Projects Section */}
         <div className="mb-20">
           <h3 className="text-xl font-semibold text-gray-500 uppercase tracking-[0.2em] mb-10">Completed Work</h3>
           <div className="grid grid-cols-1 gap-8">
             {completedProjects.map((project, index) => (
               <div key={index} className="bg-[#111111] border border-gray-800 rounded-2xl hover:border-[#7fffd4]/50 transition-all group shadow-2xl overflow-hidden">
                 <div className="flex flex-col lg:flex-row">
-                  {/* Text Content Area */}
                   <div className="p-8 lg:w-3/5 flex flex-col justify-center">
                     <div className="flex flex-col md:flex-row md:items-center justify-between mb-6">
                       <div>
@@ -102,7 +102,6 @@ export default function Projects() {
                       ))}
                     </div>
 
-                    {/* Dropdown Button */}
                     <button 
                       onClick={() => toggleExpand(index)}
                       className="flex items-center gap-2 text-[#7fffd4] text-sm font-bold uppercase tracking-widest hover:opacity-80 transition-all w-fit group/btn"
@@ -112,7 +111,6 @@ export default function Projects() {
                     </button>
                   </div>
 
-                  {/* Project Image Area */}
                   <div className="lg:w-2/5 h-64 lg:h-auto relative overflow-hidden bg-gray-900">
                     <img 
                       src={project.image} 
@@ -123,7 +121,6 @@ export default function Projects() {
                   </div>
                 </div>
 
-                {/* Expanded Content Section */}
                 <div className={`overflow-hidden transition-all duration-500 ease-in-out bg-black/40 ${expandedIndex === index ? 'max-h-[500px] border-t border-gray-800' : 'max-h-0'}`}>
                   <div className="p-8">
                     <h5 className="text-[#7fffd4] text-xs font-black uppercase tracking-[0.2em] mb-8">Development Team</h5>
@@ -135,7 +132,6 @@ export default function Projects() {
                             <span className="text-[#7fffd4] text-xs font-mono uppercase tracking-widest">{member.role}</span>
                           </div>
                           
-                          {/* Social Icons - Basis from your Contact code */}
                           <div className="flex items-center gap-4">
                             {member.socials.map((social, sIndex) => (
                               <a 
@@ -163,7 +159,6 @@ export default function Projects() {
           </div>
         </div>
 
-        {/* Ongoing Projects Section */}
         <div>
           <h3 className="text-xl font-semibold text-gray-500 uppercase tracking-[0.2em] mb-10">In Development</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
