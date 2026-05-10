@@ -22,7 +22,7 @@ export default function Experience() {
       title: "Web Developer",
       company: "Macro Wiring Technologies Co. Inc.",
       location: "General Trias, Cavite",
-      period: "2025 - Present",
+      period: "2026 Ongoing",
       description: [
         "Developing and maintaining the company website to showcase products and services.",
         "Managing vendor inquiries and communications through integrated systems.",
