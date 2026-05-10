@@ -1,6 +1,7 @@
 "use client";
 
 import React from 'react';
+import Image from 'next/image'; // Importing Next.js Image component
 import { FaFacebook, FaInstagram, FaLinkedinIn, FaUsers } from "react-icons/fa6";
 import { IoMailOutline, IoCallOutline } from "react-icons/io5";
 
@@ -79,9 +80,18 @@ export default function Contact() {
                         href={social.href} 
                         target="_blank" 
                         rel="noopener noreferrer"
-                        className="flex items-center gap-4 px-6 h-12 border border-gray-800 rounded-xl hover:border-[#7fffd4] hover:bg-[#7fffd4]/5 transition-all duration-300 bg-[#111111] group"
+                        className="flex items-center gap-4 pl-4 pr-6 h-14 border border-gray-800 rounded-xl hover:border-[#7fffd4] hover:bg-[#7fffd4]/5 transition-all duration-300 bg-[#111111] group"
                       >
-                          <social.icon className="w-5 h-5 text-gray-500 group-hover:text-[#7fffd4] transition-colors" />
+                          {/* Team Logo Image Integration with updated filename */}
+                          <div className="relative w-8 h-8 overflow-hidden rounded-lg">
+                            <Image 
+                              src="/LIKNAYAN.jpg" 
+                              alt="Team Logo" 
+                              fill
+                              className="object-contain"
+                            />
+                          </div>
+                          
                           <span className="text-xs font-bold text-gray-400 group-hover:text-white transition-colors uppercase tracking-widest">
                             View Team Page
                           </span>
