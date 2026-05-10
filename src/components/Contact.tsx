@@ -1,8 +1,7 @@
 "use client";
 
 import React from 'react';
-// We are using React Icons instead of Lucide to avoid export errors
-import { FaFacebook, FaInstagram, FaLinkedinIn } from "react-icons/fa6";
+import { FaFacebook, FaInstagram, FaLinkedinIn, FaUsers } from "react-icons/fa6";
 import { IoMailOutline, IoCallOutline } from "react-icons/io5";
 
 export default function Contact() {
@@ -11,10 +10,14 @@ export default function Contact() {
     { icon: IoCallOutline, label: 'Contact Number', value: '+63 999 470 2919', href: 'tel:+639994702919' },
   ];
 
-  const socialLinks = [
+  const personalSocials = [
     { icon: FaFacebook, href: 'https://www.facebook.com/paulunicus/', label: 'Facebook' },
     { icon: FaInstagram, href: 'https://www.instagram.com/paulunicus/', label: 'Instagram' },
     { icon: FaLinkedinIn, href: 'https://www.linkedin.com/in/john-paul-valdez-3335733b7/', label: 'Linkedin' },
+  ];
+
+  const teamSocials = [
+    { icon: FaUsers, href: 'https://www.facebook.com/share/189H2n8uPR/', label: 'Team Projects Page' },
   ];
 
   return (
@@ -47,20 +50,44 @@ export default function Contact() {
             ))}
           </div>
 
-          <div className="border-t border-gray-900 pt-10">
-            <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-[0.2em] mb-8">Social Media</h3>
-            <div className="flex items-center gap-6">
-                {socialLinks.map((social, index) => (
-                    <a 
-                      key={index} 
-                      href={social.href} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="w-14 h-14 flex items-center justify-center border border-gray-800 rounded-xl hover:border-[#7fffd4] hover:bg-[#7fffd4]/5 transition-all duration-300 bg-[#111111] group"
-                    >
-                        <social.icon className="w-6 h-6 text-gray-500 group-hover:text-[#7fffd4] transition-colors" />
-                    </a>
-                ))}
+          {/* SOCIAL MEDIA SECTION */}
+          <div className="border-t border-gray-900 pt-10 space-y-10">
+            <div>
+              <h3 className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.3em] mb-6">Social Media</h3>
+              <div className="flex flex-wrap items-center gap-4">
+                  {personalSocials.map((social, index) => (
+                      <a 
+                        key={index} 
+                        href={social.href} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="w-12 h-12 flex items-center justify-center border border-gray-800 rounded-xl hover:border-[#7fffd4] hover:bg-[#7fffd4]/5 transition-all duration-300 bg-[#111111] group"
+                      >
+                          <social.icon className="w-5 h-5 text-gray-500 group-hover:text-[#7fffd4] transition-colors" />
+                      </a>
+                  ))}
+              </div>
+            </div>
+
+            {/* TEAM SOCIAL MEDIA PAGE SECTION */}
+            <div>
+              <h3 className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.3em] mb-6">Team Social Media Page</h3>
+              <div className="flex flex-wrap items-center gap-4">
+                  {teamSocials.map((social, index) => (
+                      <a 
+                        key={index} 
+                        href={social.href} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-4 px-6 h-12 border border-gray-800 rounded-xl hover:border-[#7fffd4] hover:bg-[#7fffd4]/5 transition-all duration-300 bg-[#111111] group"
+                      >
+                          <social.icon className="w-5 h-5 text-gray-500 group-hover:text-[#7fffd4] transition-colors" />
+                          <span className="text-xs font-bold text-gray-400 group-hover:text-white transition-colors uppercase tracking-widest">
+                            View Team Page
+                          </span>
+                      </a>
+                  ))}
+              </div>
             </div>
           </div>
         </div>
