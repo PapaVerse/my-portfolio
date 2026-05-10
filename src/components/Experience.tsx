@@ -19,7 +19,7 @@ export default function Experience() {
     {
       title: "Tech Support",
       company: "HRD Singapore, PTE, LTD.",
-      location: "Singapore / Remote",
+      location: "General Trias, Cavite",
       period: "2025",
       description: [
         "Provided technical support for applications, systems, hardware, and software concerns across multiple departments.",
