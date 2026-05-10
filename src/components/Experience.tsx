@@ -5,7 +5,7 @@ import { Briefcase, Calendar, MapPin, ChevronLeft, ChevronRight } from 'lucide-r
 
 export default function Experience() {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [itemsPerView, setItemsPerView] = useState(1); // Default to 1 for server-side
+  const [itemsPerView, setItemsPerView] = useState(1);
 
   const experiences = [
     {
@@ -33,7 +33,7 @@ export default function Experience() {
     {
       title: "Tech Support",
       company: "HRD Singapore, PTE, LTD.",
-      location: "2025",
+      location: "General Trias, Cavite",
       period: "2025",
       description: [
         "Provided technical support for applications, systems, and hardware.",
@@ -53,62 +53,77 @@ export default function Experience() {
     }
   ];
 
-  // Safely handle window width after component mounts
   useEffect(() => {
     const handleResize = () => {
       setItemsPerView(window.innerWidth < 768 ? 1 : 2);
     };
-
-    handleResize(); // Set initial value
+    handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   const nextSlide = () => {
-    // Prevent sliding past the end
     const maxIndex = experiences.length - itemsPerView;
     setCurrentIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
   };
 
   const prevSlide = () => {
-    setCurrentIndex((prev) => (prev === 0 ? experiences.length - itemsPerView : prev - 1));
+    const maxIndex = experiences.length - itemsPerView;
+    setCurrentIndex((prev) => (prev === 0 ? maxIndex : prev - 1));
   };
 
   return (
     <section id="experience" className="py-24 px-6 bg-[#0a0a0a] border-t border-gray-900 overflow-hidden">
       <div className="max-w-6xl mx-auto">
         
-        <div className="mb-16 flex justify-between items-end">
-          <div>
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">Experience</h2>
-            <div className="h-1 w-20 bg-[#7fffd4] shadow-[0_0_10px_#7fffd4]"></div>
-          </div>
-          
-          <div className="flex gap-4">
-            <button 
-              onClick={prevSlide}
-              className="p-3 rounded-full border border-gray-800 bg-[#111] text-[#7fffd4] hover:border-[#7fffd4] transition-all duration-300"
-            >
-              <ChevronLeft size={24} />
-            </button>
-            <button 
-              onClick={nextSlide}
-              className="p-3 rounded-full border border-gray-800 bg-[#111] text-[#7fffd4] hover:border-[#7fffd4] transition-all duration-300"
-            >
-              <ChevronRight size={24} />
-            </button>
+        {/* Header with Counter and Buttons Side-by-Side */}
+        <div className="mb-16">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div className="space-y-4">
+              <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight">Experience</h2>
+              <div className="h-1 w-20 bg-[#7fffd4] shadow-[0_0_10px_#7fffd4]"></div>
+            </div>
+
+            {/* Navigation & Counter Group */}
+            <div className="flex items-center gap-6 bg-[#111] p-2 pr-4 rounded-full border border-gray-800 self-start md:self-auto">
+              <div className="flex gap-2">
+                <button 
+                  onClick={prevSlide}
+                  className="p-3 rounded-full border border-gray-800 bg-[#0a0a0a] text-[#7fffd4] hover:border-[#7fffd4] hover:bg-[#7fffd4]/5 transition-all duration-300"
+                >
+                  <ChevronLeft size={20} />
+                </button>
+                <button 
+                  onClick={nextSlide}
+                  className="p-3 rounded-full border border-gray-800 bg-[#0a0a0a] text-[#7fffd4] hover:border-[#7fffd4] hover:bg-[#7fffd4]/5 transition-all duration-300"
+                >
+                  <ChevronRight size={20} />
+                </button>
+              </div>
+              
+              {/* Vertical Divider */}
+              <div className="h-8 w-[1px] bg-gray-800"></div>
+
+              {/* Total Count Badge */}
+              <div className="flex flex-col items-start leading-none">
+                <span className="text-[#7fffd4] text-lg font-bold font-mono">
+                  {experiences.length.toString().padStart(2, '0')}
+                </span>
+                <span className="text-[10px] text-gray-500 font-bold uppercase tracking-tighter">Total Exp</span>
+              </div>
+            </div>
           </div>
         </div>
 
+        {/* Carousel Content */}
         <div className="relative">
           <div 
-            className="flex transition-transform duration-500 ease-out" 
+            className="flex transition-transform duration-700 cubic-bezier(0.4, 0, 0.2, 1)" 
             style={{ transform: `translateX(-${currentIndex * (100 / itemsPerView)}%)` }}
           >
             {experiences.map((exp, index) => (
               <div key={index} className="w-full md:w-1/2 flex-shrink-0 px-3">
                 <div className="h-full bg-[#111] border border-gray-800 p-8 rounded-3xl shadow-2xl hover:border-[#7fffd4]/40 transition-all duration-300 group">
-                  
                   <div className="flex justify-between items-start mb-6">
                     <div className="p-3 rounded-2xl bg-[#0a0a0a] border border-gray-800 group-hover:border-[#7fffd4] transition-colors">
                       <Briefcase className="text-[#7fffd4]" size={24} />
@@ -143,13 +158,17 @@ export default function Experience() {
           </div>
         </div>
 
+        {/* Progress Dots */}
         <div className="mt-12 flex justify-center gap-2">
-          {experiences.slice(0, experiences.length - (itemsPerView - 1)).map((_, i) => (
-            <div 
-              key={i}
-              className={`h-1.5 transition-all duration-300 rounded-full ${currentIndex === i ? 'w-8 bg-[#7fffd4]' : 'w-2 bg-gray-800'}`}
-            />
-          ))}
+          {experiences.map((_, i) => {
+            if (i > experiences.length - itemsPerView) return null;
+            return (
+              <div 
+                key={i}
+                className={`h-1.5 transition-all duration-500 rounded-full ${currentIndex === i ? 'w-10 bg-[#7fffd4]' : 'w-2 bg-gray-800'}`}
+              />
+            );
+          })}
         </div>
       </div>
     </section>
