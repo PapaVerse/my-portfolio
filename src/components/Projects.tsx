@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { ChevronDown, Globe } from 'lucide-react';
+import { ChevronDown, Globe, ExternalLink } from 'lucide-react';
 // Using React Icons for brand stability
 import { FaFacebook, FaInstagram, FaLinkedinIn } from "react-icons/fa6";
 
@@ -23,6 +23,7 @@ export default function Projects() {
       period: "1 Month",
       status: "Completed",
       image: "/project-images/macro.png",
+      link: "https://www.macrowiring.com/",
       team: [
         { 
           name: "Drexel Santos", 
@@ -49,6 +50,19 @@ export default function Projects() {
   ];
 
   const ongoingProjects = [
+    {
+      title: "SIS Web Based (Cavite Westpoint College)",
+      type: "School Management System",
+      description: "A comprehensive web-based platform designed to streamline academic and administrative processes. Automates workflows, secures student record management, and connects various institutional roles.",
+      stack: ["React", "Node.js", "TypeScript", "Firebase", "Cloud"],
+      features: [
+        "Public Website & Content Management System (CMS)",
+        "Online Admission System",
+        "Student & Faculty Portals",
+        "Registrar Portal & Academic Workflows"
+      ],
+      status: "Proposed / Requirements Gathering"
+    },
     {
       title: "MChat Communication System",
       type: "Internal Messaging & Collaboration",
@@ -85,7 +99,19 @@ export default function Projects() {
                     <div className="flex flex-col md:flex-row md:items-center justify-between mb-6">
                       <div>
                         <span className="text-[#7fffd4] text-sm font-mono mb-2 block">{project.type}</span>
-                        <h4 className="text-2xl font-bold text-white group-hover:text-[#7fffd4] transition-colors">{project.title}</h4>
+                        {project.link ? (
+                          <a 
+                            href={project.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2 text-2xl font-bold text-white group-hover:text-[#7fffd4] transition-colors"
+                          >
+                            {project.title}
+                            <ExternalLink className="w-5 h-5 text-gray-500 group-hover:text-[#7fffd4] transition-colors" />
+                          </a>
+                        ) : (
+                          <h4 className="text-2xl font-bold text-white group-hover:text-[#7fffd4] transition-colors">{project.title}</h4>
+                        )}
                       </div>
                       <div className="mt-4 md:mt-0">
                         <span className="text-gray-500 text-sm italic">Duration: {project.period}</span>
@@ -112,11 +138,21 @@ export default function Projects() {
                   </div>
 
                   <div className="lg:w-2/5 h-64 lg:h-auto relative overflow-hidden bg-gray-900">
-                    <img 
-                      src={project.image} 
-                      alt={project.title}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-80 group-hover:opacity-100"
-                    />
+                    {project.link ? (
+                      <a href={project.link} target="_blank" rel="noopener noreferrer" className="block w-full h-full">
+                        <img 
+                          src={project.image} 
+                          alt={project.title}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-80 group-hover:opacity-100"
+                        />
+                      </a>
+                    ) : (
+                      <img 
+                        src={project.image} 
+                        alt={project.title}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-80 group-hover:opacity-100"
+                      />
+                    )}
                     <div className="absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-l from-transparent to-[#111111] pointer-events-none"></div>
                   </div>
                 </div>
@@ -181,7 +217,7 @@ export default function Projects() {
                 </div>
                 <div className="flex flex-wrap gap-2 pt-4 border-t border-gray-900">
                   {project.stack.map((tech, i) => (
-                    <span key={i} className="text-[10px] text-gray-600 font-mono uppercase">{tech}</span>
+                    <span key={i} className="text-[10px] text-gray-600 font-mono uppercase mr-2">{tech}</span>
                   ))}
                 </div>
               </div>
